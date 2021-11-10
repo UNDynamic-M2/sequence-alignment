@@ -3,7 +3,9 @@ console_log = function (message) {
 }
 
 print_matrix = function (mat) {
-  
+  for (i in mat) {
+    console_log(i)
+  }
 }
 
 print_program_header = function () {

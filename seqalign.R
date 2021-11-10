@@ -32,15 +32,17 @@ option_list = list(
 ) 
 
 opt_parser = OptionParser(option_list=option_list)
-options = parse_args(opt_parser, positional_arguments = TRUE)
+parsed_cmd = parse_args(opt_parser, positional_arguments = TRUE)
+options = parsed_cmd$options
+arguments = parsed_cmd$args
 
-if (length(options$args) != 2) {
+if (length(arguments) != 2) {
   console_log("Please provide both sequences.")
   quit(status = 1)
 }
 
-sequence1 = options$args[0]
-sequence2 = options$args[1]
+sequence1 = arguments[1]
+sequence2 = arguments[2]
 subst_matrix = NULL
 gap_open_penalty = options$gap_open_penalty
 gap_extend_penalty = options$gap_extend_penalty
@@ -51,10 +53,22 @@ if (is.null(options$subst_matrix)) {
    c(-4, 5, -4, -4),
    c(-4, -4, 5, -4),
    c(-4, -4, -4, 5)), 4, 4)
+} else {
+  subst_matrix = read.table(options$subst_matrix, sep = " ")
 }
 
 print_program_header()
 console_log("\nRunning sequence alignment with:")
 console_log(c("Sequence 1: ", sequence1))
 console_log(c("Sequence 2: ", sequence2))
-console_log(subst_matrix)
+console_log("Substitution matrix:")
+print(subst_matrix)
+console_log(c("Gap opening penalty: ", gap_open_penalty))
+console_log(c("Gap extending penalty: ", gap_extend_penalty))
+
+# Call initialise and fill of scoring matrix
+
+# Call tracebacking
+
+# Call pretty printing
+
