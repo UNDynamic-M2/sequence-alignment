@@ -23,4 +23,15 @@ subst_matrix = matrix(c(
 Now we initialise the matrix:
 
 ```{r}
+rows = length(sequence1) + 1
+columns = length(sequence2) + 1
+V = matrix(0, rows, columns) # scoring matrix
+G = matrix(0, rows, columns)
+H = matrix(0, rows, columns)
+
+for (i in 2:rows) {
+  for (j in 2:columns) {
+    # Fill the matrix...
+  }
+}
 ```
