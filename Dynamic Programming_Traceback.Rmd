@@ -9,16 +9,16 @@ rm(list = ls())
 
 ```{r}
 # Temporary Input Variables
-
 scoring_matrix <- matrix(1:16, nrow = 4, ncol = 4)
 scoring_matrix[1,] <- 0
 scoring_matrix[,1] <- 0
-#scoring_matrix <- t(scoring_matrix)
+scoring_matrix[3,3] <- 14
 seq_1 <- c('a','b','c')
 seq_2 <- c('d','e','f')
 
-string_1 <- c()
-string_2 <- c()
+# Initialise alignment matrix
+alignment_list <- list('sequence alignments')
+alignment_matrix <- matrix(0, nrow = 2, ncol = 1)
 
 print(scoring_matrix)
 ```
@@ -26,11 +26,11 @@ print(scoring_matrix)
 # find maximum value in scoring matrix and allocate as score
 score <- max(scoring_matrix)
 start_position <- which(scoring_matrix == score, arr.ind = TRUE)
-print(start_position)
-string_1 <- append(string_1, seq_1[start_position[1]-1])
-string_2 <- append(string_2, seq_2[start_position[2]-1])
-print(string_1)
-print(string_2)
+```
+```{r}
+# create vector and matrix containing alignment values from sequences
+alignment_vector <- c(seq_1[start_position[1]-1], seq_2[start_position[2]-1])
+alignment_matrix <- cbind(alignment_matrix, alignment_vector)
 ```
 ```{r}
 # move to next position in scoring matrix
@@ -51,36 +51,37 @@ while (scoring_matrix[position] != 0) {
   
   if(step == diagonal) {
     jump <- c(-1, -1)
+    # if the diagonal is equal to the maximum value in the step_vec, position moves up and left
     position <- position + jump
-    string_1 <- append(string_1, seq_1[position[1]-1])
-    string_2 <- append(string_2, seq_2[position[2]-1])
+    # new alignment vector contains values from both sequences
+    alignment_vector <- c(seq_1[position[1]-1], seq_2[position[2]-1])
+    alignment_matrix <- cbind(alignment_matrix, alignment_vector)
     
   } else if (step == horizontal) {
     jump <- c(0, -1)
     position <- position + jump
-    string_1 <- append(string_1, '_')
-    string_2 <- append(string_2, seq_2[position[2]-1])
+    # new alignment vector contains values only from seq_2
+    alignment_vector <- c('_', seq_2[position[2]-1])
+    alignment_matrix <- cbind(alignment_matrix, alignment_vector)
     
   } else {
     jump <- c(-1, 0)
     position <- position + jump
-    string_1 <- append(string_1, seq_1[position[1]-1])
-    string_2 <- append(string_2, '_')
+    # new alignment vector contains values only from seq_1
+    alignment_vector <- c(seq_1[position[1]-1],'_')
+    alignment_matrix <- cbind(alignment_matrix, alignment_vector)
   }
   
-  # new position vector is old + movement
-  #position <- position + jump
+  # print(position)
   
 }
-
-print(rev(string_1))
-print(rev(string_2))
+alignment_list[[2]] <- alignment_matrix
+print(alignment_list)
 ```
 ```{r}
-seq_x <- c('a','b','c')
-str_x <- c()
-str_x <- append(str_x, seq_x[1])
-print(str_x)
-str_x <- append(str_x, seq_x[2])
-print(str_x)
+# experiments
+
+alignment_list <- list('sequence alignments' ,alignment_matrix)
+alignment_list[3] <- 
+print(alignment_list)
 ```

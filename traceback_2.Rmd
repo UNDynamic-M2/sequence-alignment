@@ -1,0 +1,130 @@
+---
+title: "traceback_2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls())
+```
+
+```{r}
+# Temporary scoring matrix
+scoring_matrix <- matrix(1:16, nrow = 4, ncol = 4)
+scoring_matrix[1,] <- 0
+scoring_matrix[,1] <- 0
+scoring_matrix[4,3] <- 16
+
+#temporary sequences
+seq_1 <- c('a','b','c')
+seq_2 <- c('d','e','f')
+alignment_length <- length(seq_1) + 1
+
+print(scoring_matrix)
+```
+```{r}
+# find maximum value in scoring matrix and allocate as score and start position
+score <- max(scoring_matrix)
+start_position <- which(scoring_matrix == score, arr.ind = TRUE)
+
+# for loop over all possible start positions
+for(i in 1:nrow(start_position)) {
+  
+  position <- start_position[i,]
+  
+  # create alignment variables
+  alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+  alignment_matrix <- matrix(alignment_vector)
+  
+  #while (scoring_matrix[position] != 0) {
+    for (n in 1:alignment_length) { # need to figure out how to loop over length
+      
+      # Create vector of next possible steps
+      vertical <- scoring_matrix[position[1] -1, position[2]]
+      horizontal <- scoring_matrix[position[1], position[2] -1]
+      diagonal <- scoring_matrix[position[1] -1, position[2] -1]
+      
+      # initialise step vector otherwise diagonal doesn't work!!!!
+      step_vec <- rep(0,3)
+      step_vec <- step_vec + c(vertical, horizontal, diagonal)
+      step <- max(step_vec)
+    
+      if (step == diagonal) {
+        # if the diagonal is equal to the maximum value in the step_vec, position moves up and left
+        jump <- c(-1,-1)
+        position <- position + jump
+        # new alignment vector contains values from both sequences
+        alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+        alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+      } else if (step == horizontal) {
+        jump <- c(0,-1)
+        position <- position + jump
+        # new alignment vector contains values only from seq_2
+        alignment_vector <- c('_',seq_2[position[2]-1])
+        alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+      } else {
+        jump <- c(-1,0)
+        position <- position + jump
+        # new alignment vector contains values only from seq_1
+        alignment_vector <- c(seq_1[position[1]-1],'_')
+        alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+      }
+    #print(position)
+  }
+  print(alignment_matrix)
+}
+```
+```{r}
+# functionalise
+  traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
+# find maximum value in scoring matrix and allocate as score and start position
+  score <- max(scoring_matrix)
+  start_position <- which(scoring_matrix == score, arr.ind = TRUE)
+  
+  # for loop over all possible start positions
+  for(i in 1:nrow(start_position)) {
+    
+    position <- start_position[i,]
+    
+    # create alignment variables
+    alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+    alignment_matrix <- matrix(alignment_vector)
+    
+    #while (scoring_matrix[position] != 0) {
+      for (n in 1:alignment_length) { # need to figure out how to loop over length
+        
+        # Create vector of next possible steps
+        vertical <- scoring_matrix[position[1] -1, position[2]]
+        horizontal <- scoring_matrix[position[1], position[2] -1]
+        diagonal <- scoring_matrix[position[1] -1, position[2] -1]
+        
+        # initialise step vector otherwise diagonal doesn't work!!!!
+        step_vec <- rep(0,3)
+        step_vec <- step_vec + c(vertical, horizontal, diagonal)
+        step <- max(step_vec)
+      
+        if (step == diagonal) {
+          # if the diagonal is equal to the maximum value in the step_vec, position moves up and left
+          jump <- c(-1,-1)
+          position <- position + jump
+          # new alignment vector contains values from both sequences
+          alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+          alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+        } else if (step == horizontal) {
+          jump <- c(0,-1)
+          position <- position + jump
+          # new alignment vector contains values only from seq_2
+          alignment_vector <- c('_',seq_2[position[2]-1])
+          alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+        } else {
+          jump <- c(-1,0)
+          position <- position + jump
+          # new alignment vector contains values only from seq_1
+          alignment_vector <- c(seq_1[position[1]-1],'_')
+          alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+        }
+      #print(position)
+    }
+  }
+  return(alignment_matrix)
+}
+```
