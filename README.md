@@ -1,5 +1,7 @@
 # Sequence Alignment
 
+Local sequence alignment using the Smith-Waterman algorithm.
+
 ## Development instructions
 
 First of all we need to clone the repository to our local machine:
@@ -22,6 +24,10 @@ git pull
 ```
 
 ## Usage
+
+There are two ways you can use the tool, through a command line interface or a graphical user interface.
+
+### Command Line Interface
 
 First, install the dependencies to use the tool (two ways):
 
@@ -49,7 +55,7 @@ Rscript seqalign.R examples/sequence-1 examples/sequence-2
 
 In this case since we didn't provide the substitution matrix and the gap penalties, the default ones are used (see "Arguments and options").
 
-## Arguments and options
+#### Arguments and options
 
 The mandatory arguments are the two sequences.
 
@@ -61,6 +67,10 @@ The options are as follows:
 | `-e`, `--gap_extend_penalty` | The gap extension penalty                | float              | 0.5     |
 | `-s`, `--subst_matrix`       | The substitution matrix used for scoring | string or filename | DNAFull |
 | `-h`, `--help`               | Display the help page for the tool       | /                  | /       |
+
+### Graphical user interface
+
+The graphical user interface, is deployed as a web application at the following URL: https://undynamic.shinyapps.io/sequence-alignment
 
 ## Testing
 
