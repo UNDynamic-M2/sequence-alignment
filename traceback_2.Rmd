@@ -26,8 +26,6 @@ start_position <- which(scoring_matrix == score, arr.ind = TRUE)
 print(start_position)
 ```
 ```{r}
-
-
 for(i in 1:nrow(start_position)) {
   alignment_matrix <- matrix(0, nrow = 2, ncol = 1)
   position <- start_position[i,]
@@ -36,19 +34,23 @@ for(i in 1:nrow(start_position)) {
  
   #while (scoring_matrix[position] != 0) {
 
-  # Create vector of next possible steps
-    vertical <- scoring_matrix[position[1] -1, position[2]]
-    horizontal <- scoring_matrix[position[1], position[2] -1]
-    diagonal <- scoring_matrix[position[1] -1, position[2] -1]
-
-    step_vec <- c(vertical, horizontal, diagonal)
-    step <- max(step_vec)
   
-    #create movement vector
-    jump <- c(0,0)
     
-    for (n in 1:length(seq_1)+5) {
+    for (n in 1:length(seq_1)) {
+      
+      # Create vector of next possible steps
+      vertical <- scoring_matrix[position[1] -1, position[2]]
+      horizontal <- scoring_matrix[position[1], position[2] -1]
+      diagonal <- scoring_matrix[position[1] -1, position[2] -1]
+  
+      step_vec <- c(vertical, horizontal, diagonal)
+      step <- max(step_vec)
+    
+      #create movement vector
+      jump <- c(0,0)
+      
     #while (scoring_matrix[position] != 0) {
+      #print(step_vec)
     
       if (step == diagonal) {
         jump <- c(-1,-1)
@@ -66,7 +68,7 @@ for(i in 1:nrow(start_position)) {
         alignment_vector <- c(seq_1[position[1]-1],'_')
         alignment_matrix <- cbind(alignment_matrix, alignment_vector)
       }
-    
+    #print(position)
   }
   print(alignment_matrix)
 }
