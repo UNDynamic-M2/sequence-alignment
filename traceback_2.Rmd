@@ -12,7 +12,7 @@ rm(list = ls())
 scoring_matrix <- matrix(1:16, nrow = 4, ncol = 4)
 scoring_matrix[1,] <- 0
 scoring_matrix[,1] <- 0
-scoring_matrix[4,3] <- 16
+scoring_matrix[3,3] <- 14
 
 seq_1 <- c('a','b','c')
 seq_2 <- c('d','e','f')
@@ -36,7 +36,7 @@ for(i in 1:nrow(start_position)) {
 
   
     
-    for (n in 1:length(seq_1)) {
+    for (n in 1:(length(seq_1)+1)) {
       
       # Create vector of next possible steps
       vertical <- scoring_matrix[position[1] -1, position[2]]
