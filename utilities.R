@@ -15,3 +15,16 @@ print_program_header = function () {
     "-------------------------------------"
   ))
 }
+
+is_sequence_correct = function (seq) {
+  seq_vector = unlist(strsplit(seq, split = ""))
+  bases = c("A", "T", "G", "C")
+  
+  for (base in seq_vector) {
+    if (!(base %in% bases)) {
+      return(FALSE)
+    }
+  }
+  
+  return(TRUE)
+}

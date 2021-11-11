@@ -7,6 +7,10 @@
 library("optparse")
 source("utilities.R")
 source("scoring-matrix.R")
+source("traceback.R")
+
+# Define the options that the program can take
+# --------------------------------------------
 
 option_list = list(
   make_option(
@@ -37,6 +41,9 @@ parsed_cmd = parse_args(opt_parser, positional_arguments = TRUE)
 options = parsed_cmd$options
 arguments = parsed_cmd$args
 
+# Validate the arguments
+# ----------------------
+
 if (length(arguments) != 2) {
   console_log("Please provide both sequences.")
   quit(status = 1)
@@ -44,9 +51,35 @@ if (length(arguments) != 2) {
 
 sequence1 = arguments[1]
 sequence2 = arguments[2]
-subst_matrix = NULL
+
+if (file.exists(sequence1)) {
+  sequence1 = paste(readLines(sequence1), collapse="")
+}
+
+if (file.exists(sequence2)) {
+  sequence2 = paste(readLines(sequence2), collapse="")
+}
+
+sequence1 = toupper(sequence1)
+sequence2 = toupper(sequence2)
+
+# Check correctness of sequences
+if (!is_sequence_correct(sequence1)) {
+  console_log("Sequence 1 is not in the correct format.")
+  quit(status = 1)
+}
+
+if (!is_sequence_correct(sequence2)) {
+  console_log("Sequence 2 is not in the correct format.")
+  quit(status = 1)
+}
+
 gap_open_penalty = options$gap_open_penalty
 gap_extend_penalty = options$gap_extend_penalty
+
+# Check correctness of substitution matrix
+
+subst_matrix = NULL
 
 if (is.null(options$subst_matrix)) {
   subst_matrix = matrix(c(
@@ -55,8 +88,18 @@ if (is.null(options$subst_matrix)) {
    c(-4, -4, 5, -4),
    c(-4, -4, -4, 5)), 4, 4)
 } else {
-  subst_matrix = read.table(options$subst_matrix, sep = " ")
+  subst_matrix = read.table(
+    options$subst_matrix,
+    sep = " ",
+    row.names = c("A", "T", "G", "C"),
+    col.names = c("A", "T", "G", "C")
+  )
 }
+
+# Run the program
+# ---------------
+
+# Display input information
 
 print_program_header()
 console_log("\nRunning sequence alignment with:")
@@ -67,11 +110,20 @@ print(subst_matrix)
 console_log(c("Gap opening penalty: ", gap_open_penalty))
 console_log(c("Gap extending penalty: ", gap_extend_penalty))
 
+console_log("\nRunning Smith-Waterman algorithm for local sequence alignment...\n")
+
 # Call initialise and fill of scoring matrix
+console_log("1) Initialising and filling the scoring matrix")
 sc_matrix = scoring_matrix(sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix)
+rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
+colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
 print(sc_matrix)
 
 # Call tracebacking
+console_log("\n2) Tracebacking")
+#alignment_matrix = traceback(sc_matrix, sequence1, sequence2)
+#print(alignment_matrix)
 
 # Call pretty printing
+console_log("\n3) Conventional printing")
 
