@@ -8,14 +8,16 @@ rm(list = ls())
 ```
 
 ```{r}
-# Temporary Input Variables
+# Temporary scoring matrix
 scoring_matrix <- matrix(1:16, nrow = 4, ncol = 4)
 scoring_matrix[1,] <- 0
 scoring_matrix[,1] <- 0
 scoring_matrix[3,3] <- 14
 
+#temporary sequences
 seq_1 <- c('a','b','c')
 seq_2 <- c('d','e','f')
+alignment_length <- length(seq_1) + 1
 
 print(scoring_matrix)
 ```
@@ -23,31 +25,31 @@ print(scoring_matrix)
 # find maximum value in scoring matrix and allocate as score and start position
 score <- max(scoring_matrix)
 start_position <- which(scoring_matrix == score, arr.ind = TRUE)
-print(start_position)
 ```
 ```{r}
+# for loop over all possible start positions
 for(i in 1:nrow(start_position)) {
-  alignment_matrix <- matrix(0, nrow = 2, ncol = 1)
-  position <- start_position[i,]
-  alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
-  alignment_matrix <- cbind(alignment_matrix, alignment_vector)
- 
-  #while (scoring_matrix[position] != 0) {
-
   
-    
-    for (n in 1:(length(seq_1)+1)) {
+  position <- start_position[i,]
+  
+  # create alignment variables
+  alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+  alignment_matrix <- matrix(alignment_vector)
+  
+  #while (scoring_matrix[position] != 0) {
+    for (n in 1:alignment_length) { # need to figure out how to loop over length
       
       # Create vector of next possible steps
       vertical <- scoring_matrix[position[1] -1, position[2]]
       horizontal <- scoring_matrix[position[1], position[2] -1]
       diagonal <- scoring_matrix[position[1] -1, position[2] -1]
-  
-      step_vec <- c(vertical, horizontal, diagonal)
+      
+      step_vec <- rep(0,3)
+      step_vec <- step_vec + c(vertical, horizontal, diagonal)
       step <- max(step_vec)
     
       #create movement vector
-      jump <- c(0,0)
+      #jump <- c(0,0)
       
     #while (scoring_matrix[position] != 0) {
       #print(step_vec)
@@ -62,14 +64,29 @@ for(i in 1:nrow(start_position)) {
         position <- position + jump
         alignment_vector <- c('_',seq_2[position[2]-1])
         alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+        #alignment_length <- alignment_length + 1
       } else {
         jump <- c(-1,0)
         position <- position + jump
         alignment_vector <- c(seq_1[position[1]-1],'_')
         alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+        #alignment_length <- alignment_length + 1
       }
     #print(position)
   }
   print(alignment_matrix)
+}
+```
+```{r}
+# experiments
+v <- c(0, 3, 1)
+if (v[1] == v[2]) {
+  print('zbe') 
+} else if (v[1] == v[3]) {
+  print('bze')  
+} else if (v[2] == v[3]) {
+  print('ebz')
+} else {
+  print('pnji')
 }
 ```
