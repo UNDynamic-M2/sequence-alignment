@@ -17,6 +17,7 @@ seq_1 <- c('a','b','c')
 seq_2 <- c('d','e','f')
 
 # Initialise alignment matrix
+alignment_list <- list('sequence alignments')
 alignment_matrix <- matrix(0, nrow = 2, ncol = 1)
 
 print(scoring_matrix)
@@ -74,13 +75,13 @@ while (scoring_matrix[position] != 0) {
   # print(position)
   
 }
-
-print(alignment_matrix)
+alignment_list[[2]] <- alignment_matrix
+print(alignment_list)
 ```
 ```{r}
 # experiments
 
-v <- matrix(0, nrow = 2, ncol = 1)
-v_1 <- cbind(v, c(1,1))
-print(v_1)
+alignment_list <- list('sequence alignments' ,alignment_matrix)
+alignment_list[3] <- 
+print(alignment_list)
 ```
