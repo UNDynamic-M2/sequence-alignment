@@ -10,10 +10,10 @@ print_matrix = function (mat) {
 
 print_program_header = function () {
   cat(c(
-    " -------------------------------------\n",
-    "| UNDynamic Sequence Alignment Tool |\n",
+    "-------------------------------------",
+    "| UNDynamic Sequence Alignment Tool |",
     "-------------------------------------"
-  ))
+  ), sep="\n")
 }
 
 is_sequence_correct = function (seq) {
@@ -27,4 +27,14 @@ is_sequence_correct = function (seq) {
   }
   
   return(TRUE)
+}
+
+get_default_substitution_matrix = function () {
+  subst_matrix = matrix(c(
+    c(5, -4, -4, -4),
+    c(-4, 5, -4, -4),
+    c(-4, -4, 5, -4),
+    c(-4, -4, -4, 5)), 4, 4)
+  
+  return(subst_matrix)
 }

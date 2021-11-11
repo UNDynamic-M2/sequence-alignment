@@ -1,13 +1,36 @@
 #!/usr/bin/env Rscript
 
-#
+# ===============================================
 # seqalign
 #
+# Usage: seqalign.R [options]
+#
+# Options:
+#  -s FILENAME, --subst_matrix=FILENAME
+#  filename with the substitution matrix
+#  
+#  -p FLOAT, --gap_open_penalty=FLOAT
+#  the gap opening penalty
+#  
+#  -e FLOAT, --gap_extend_penalty=FLOAT
+#  the gap extension penalty
+#  
+#  -h, --help
+#  Show this help message and exit
+#
+# 
+# Authors:
+# - Daniel Power
+# - Haonan Jiang
+# - Haonan Wang
+# - Hussain Asif
+# - Ossama Edbali
+# - Waleed Hussain
+# ===============================================
 
-library("optparse")
+library(optparse)
 source("utilities.R")
 source("scoring-matrix.R")
-source("traceback.R")
 
 # Define the options that the program can take
 # --------------------------------------------
@@ -64,6 +87,7 @@ sequence1 = toupper(sequence1)
 sequence2 = toupper(sequence2)
 
 # Check correctness of sequences
+
 if (!is_sequence_correct(sequence1)) {
   console_log("Sequence 1 is not in the correct format.")
   quit(status = 1)
@@ -82,11 +106,7 @@ gap_extend_penalty = options$gap_extend_penalty
 subst_matrix = NULL
 
 if (is.null(options$subst_matrix)) {
-  subst_matrix = matrix(c(
-   c(5, -4, -4, -4),
-   c(-4, 5, -4, -4),
-   c(-4, -4, 5, -4),
-   c(-4, -4, -4, 5)), 4, 4)
+  subst_matrix = get_default_substitution_matrix()
 } else {
   subst_matrix = read.table(
     options$subst_matrix,
