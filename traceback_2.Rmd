@@ -4,5 +4,70 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-rm(list = ls)
+rm(list = ls())
+```
+
+```{r}
+# Temporary Input Variables
+scoring_matrix <- matrix(1:16, nrow = 4, ncol = 4)
+scoring_matrix[1,] <- 0
+scoring_matrix[,1] <- 0
+scoring_matrix[4,3] <- 16
+
+seq_1 <- c('a','b','c')
+seq_2 <- c('d','e','f')
+
+print(scoring_matrix)
+```
+```{r}
+# find maximum value in scoring matrix and allocate as score and start position
+score <- max(scoring_matrix)
+start_position <- which(scoring_matrix == score, arr.ind = TRUE)
+print(start_position)
+```
+```{r}
+
+
+for(i in 1:nrow(start_position)) {
+  alignment_matrix <- matrix(0, nrow = 2, ncol = 1)
+  position <- start_position[i,]
+  alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+  alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+ 
+  #while (scoring_matrix[position] != 0) {
+
+  # Create vector of next possible steps
+    vertical <- scoring_matrix[position[1] -1, position[2]]
+    horizontal <- scoring_matrix[position[1], position[2] -1]
+    diagonal <- scoring_matrix[position[1] -1, position[2] -1]
+
+    step_vec <- c(vertical, horizontal, diagonal)
+    step <- max(step_vec)
+  
+    #create movement vector
+    jump <- c(0,0)
+    
+    for (n in 1:length(seq_1)+5) {
+    #while (scoring_matrix[position] != 0) {
+    
+      if (step == diagonal) {
+        jump <- c(-1,-1)
+        position <- position + jump
+        alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+        alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+      } else if (step == horizontal) {
+        jump <- c(0,-1)
+        position <- position + jump
+        alignment_vector <- c('_',seq_2[position[2]-1])
+        alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+      } else {
+        jump <- c(-1,0)
+        position <- position + jump
+        alignment_vector <- c(seq_1[position[1]-1],'_')
+        alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+      }
+    
+  }
+  print(alignment_matrix)
+}
 ```
