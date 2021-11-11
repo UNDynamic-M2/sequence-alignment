@@ -1,0 +1,86 @@
+---
+title: "Dynamic Programming_Traceback"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls())
+```
+
+```{r}
+# Temporary Input Variables
+scoring_matrix <- matrix(1:16, nrow = 4, ncol = 4)
+scoring_matrix[1,] <- 0
+scoring_matrix[,1] <- 0
+scoring_matrix[3,3] <- 14
+seq_1 <- c('a','b','c')
+seq_2 <- c('d','e','f')
+
+# Initialise alignment matrix
+alignment_matrix <- matrix(0, nrow = 2, ncol = 1)
+
+print(scoring_matrix)
+```
+```{r}
+# find maximum value in scoring matrix and allocate as score
+score <- max(scoring_matrix)
+start_position <- which(scoring_matrix == score, arr.ind = TRUE)
+```
+```{r}
+# create vector and matrix containing alignment values from sequences
+alignment_vector <- c(seq_1[start_position[1]-1], seq_2[start_position[2]-1])
+alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+```
+```{r}
+# move to next position in scoring matrix
+position <- start_position
+
+while (scoring_matrix[position] != 0) {
+
+  # Create vector of next possible steps
+  vertical <- scoring_matrix[position[1] -1, position[2]]
+  horizontal <- scoring_matrix[position[1], position[2] -1]
+  diagonal <- scoring_matrix[position[1] -1, position[2] -1]
+
+  step_vec <- c(vertical, horizontal, diagonal)
+  step <- max(step_vec)
+  
+  #create movement vector
+  jump <- c(0,0)
+  
+  if(step == diagonal) {
+    jump <- c(-1, -1)
+    # if the diagonal is equal to the maximum value in the step_vec, position moves up and left
+    position <- position + jump
+    # new alignment vector contains values from both sequences
+    alignment_vector <- c(seq_1[position[1]-1], seq_2[position[2]-1])
+    alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+    
+  } else if (step == horizontal) {
+    jump <- c(0, -1)
+    position <- position + jump
+    # new alignment vector contains values only from seq_2
+    alignment_vector <- c('_', seq_2[position[2]-1])
+    alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+    
+  } else {
+    jump <- c(-1, 0)
+    position <- position + jump
+    # new alignment vector contains values only from seq_1
+    alignment_vector <- c(seq_1[position[1]-1],'_')
+    alignment_matrix <- cbind(alignment_matrix, alignment_vector)
+  }
+  
+  # print(position)
+  
+}
+
+print(alignment_matrix)
+```
+```{r}
+# experiments
+
+v <- matrix(0, nrow = 2, ncol = 1)
+v_1 <- cbind(v, c(1,1))
+print(v_1)
+```
