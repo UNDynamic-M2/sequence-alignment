@@ -6,6 +6,7 @@
 
 library("optparse")
 source("utilities.R")
+source("scoring-matrix.R")
 
 option_list = list(
   make_option(
@@ -67,6 +68,8 @@ console_log(c("Gap opening penalty: ", gap_open_penalty))
 console_log(c("Gap extending penalty: ", gap_extend_penalty))
 
 # Call initialise and fill of scoring matrix
+sc_matrix = scoring_matrix(sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix)
+print(sc_matrix)
 
 # Call tracebacking
 
