@@ -1,0 +1,8 @@
+---
+title: "traceback_2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list = ls)
+```
