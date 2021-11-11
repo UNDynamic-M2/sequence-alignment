@@ -11,27 +11,27 @@ We first initialise the inputs (random, these will come from the user or set by 
 ```{r}
 sequence1 = "AAGCTT"
 sequence2 = "AGCTAT"
-gap_open_penalty = 10
-gap_extend_penalty = 0.5
+gap_open_penalty = 12
+gap_extend_penalty = 3
 subst_matrix = matrix(c(
    c(5, -4, -4, -4),
    c(-4, 5, -4, -4),
    c(-4, -4, 5, -4),
    c(-4, -4, -4, 5)), 4, 4)
 ```
-
 Now we initialise the matrix:
 
 ```{r}
 rows = length(sequence1) + 1
 columns = length(sequence2) + 1
-V = matrix(0, rows, columns) # scoring matrix
-G = matrix(0, rows, columns)
+S = matrix(0, rows, columns) # scoring matrix
+V = matrix(0, rows, columns)
 H = matrix(0, rows, columns)
 
 for (i in 2:rows) {
   for (j in 2:columns) {
     # Fill the matrix...
-  }
+  
+    }
 }
 ```
