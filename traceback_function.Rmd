@@ -6,7 +6,9 @@ output: html_document
 ```{r}
 # functionalise
   traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
-# find maximum value in scoring matrix and allocate as score and start position
+  # inputs are the scoring matrix and sequences, with seq_1 corresponding vertically to the matrix, and seq_2 horizontally
+    
+  # find maximum value in scoring matrix and allocate as score and start position
   score <- max(scoring_matrix)
   start_position <- which(scoring_matrix == score, arr.ind = TRUE)
   
