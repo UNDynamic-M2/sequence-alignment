@@ -13,14 +13,14 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
     
     position <- start_position[i,]
     
-    # create alignment variables
-    alignment_vector <- c(seq_1[position[1]-1],seq_2[position[2]-1])
-    alignment_matrix <- matrix(alignment_vector)
+    # a matrix is created for the alignment and filled with the initial alignment, with the top row corresponding to seq_1 and the bottom seq_2
+    initial_alignment <- c(seq_1[position[1]-1],seq_2[position[2]-1])
+    alignment_matrix <- matrix(initial_alignment)
     
-    #while (scoring_matrix[position] != 0) {
-    for (n in 1:(length(seq_1)+1)) { # need to figure out how to loop over length
+    # for loop over the alignment pairs
+    for (n in 1:(length(seq_1)+1)) {
       
-      # Create step vector of next possible steps, the maximum of which will be the next postion of the traceback loop
+      # Create step vector of next possible steps, the maximum of which will be the next position of the traceback loop
       step_vec <- rep(0,3)
       
       vertical <- scoring_matrix[position[1] -1, position[2]]
