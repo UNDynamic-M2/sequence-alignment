@@ -18,5 +18,5 @@ pretty_print = function(seq_1, seq_2) {
   seq2_str = paste(seq_2, collapse = '')
   align_str = paste(alignment_str, collapse = '')
   
-  return(cat(paste(seq1_str, align_str, seq2_str, sep = '\n')))
+  return(paste(seq1_str, align_str, seq2_str, sep = '\n'))
 }

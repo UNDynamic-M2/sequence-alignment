@@ -102,6 +102,7 @@ if (!is_sequence_correct(sequence2)) {
 
 sequence1_vector = unlist(strsplit(sequence1, split = ""))
 sequence2_vector = unlist(strsplit(sequence2, split = ""))
+short_sequences = length(sequence1_vector) < 50 && length(sequence2_vector) < 50
 
 # Check correctness of gap penalties
 
@@ -134,10 +135,16 @@ if (is.null(options$subst_matrix)) {
 
 print_program_header()
 console_log("\nRunning sequence alignment with:")
-console_log(c("Sequence 1: ", sequence1))
-console_log(c("Sequence 2: ", sequence2))
+if (short_sequences) {
+  console_log(c("Sequence 1: ", sequence1))
+  console_log(c("Sequence 2: ", sequence2))
+} else {
+  console_log("Input sequences are too big to display.")
+}
+
 console_log("Substitution matrix:")
 print(subst_matrix)
+
 console_log(c("Gap opening penalty: ", gap_open_penalty))
 console_log(c("Gap extending penalty: ", gap_extend_penalty))
 
@@ -148,7 +155,13 @@ console_log("1) Initialising and filling the scoring matrix")
 sc_matrix = scoring_matrix(sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix)
 rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
 colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
-print(sc_matrix)
+
+write.table(sc_matrix, file="scoring_matrix.txt")
+console_log("Scoring matrix saved in 'scoring_matrix.txt'")
+
+if (short_sequences) {
+  print(sc_matrix)
+}
 
 # Call tracebacking
 console_log("\n2) Tracebacking")
@@ -158,4 +171,5 @@ print(alignments)
 # Call pretty printing
 console_log("\n3) Conventional printing")
 alignment = alignments[[1]]
-pretty_print(alignment[1,], alignment[2,])
+alignment_result = pretty_print(alignment[1,], alignment[2,])
+console_log(alignment_result)
