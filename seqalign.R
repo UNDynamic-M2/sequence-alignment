@@ -31,6 +31,7 @@
 library(optparse)
 source("utilities.R")
 source("scoring-matrix.R")
+source("traceback.R")
 
 # Define the options that the program can take
 # --------------------------------------------
@@ -141,8 +142,8 @@ print(sc_matrix)
 
 # Call tracebacking
 console_log("\n2) Tracebacking")
-#alignment_matrix = traceback(sc_matrix, sequence1, sequence2)
-#print(alignment_matrix)
+alignment_matrix = traceback_funk(sc_matrix, sequence1, sequence2)
+print(alignment_matrix)
 
 # Call pretty printing
 console_log("\n3) Conventional printing")
