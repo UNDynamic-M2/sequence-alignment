@@ -39,12 +39,12 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
         jump <- c(0,-1)
         position <- position + jump
         # the next base from seq_2 is added to the bottom row but a space corresponding with seq_1 is added to the top
-        alignment_matrix <- cbind(alignment_matrix, c('_',seq_2[position[2]-1]))
+        alignment_matrix <- cbind(alignment_matrix, c('-',seq_2[position[2]-1]))
       } else {
         jump <- c(-1,0)
         position <- position + jump
         # the next base from seq_1 is added to the top row but a space corresponding with seq_2 is added to the bottom
-        alignment_matrix <- cbind(alignment_matrix, c(seq_1[position[1]-1],'_'))
+        alignment_matrix <- cbind(alignment_matrix, c(seq_1[position[1]-1],'-'))
       }
     }
     

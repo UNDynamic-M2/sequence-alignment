@@ -32,6 +32,7 @@ library(optparse)
 source("utilities.R")
 source("scoring-matrix.R")
 source("traceback.R")
+source("pretty-printing.R")
 
 # Define the options that the program can take
 # --------------------------------------------
@@ -99,8 +100,17 @@ if (!is_sequence_correct(sequence2)) {
   quit(status = 1)
 }
 
+sequence1_vector = unlist(strsplit(sequence1, split = ""))
+sequence2_vector = unlist(strsplit(sequence2, split = ""))
+
+# Check correctness of gap penalties
+
 gap_open_penalty = options$gap_open_penalty
 gap_extend_penalty = options$gap_extend_penalty
+
+if (gap_open_penalty <= gap_extend_penalty) {
+  console_log("Warning: gap open penalty is less than the extension penalty!")
+}
 
 # Check correctness of substitution matrix
 
@@ -142,9 +152,10 @@ print(sc_matrix)
 
 # Call tracebacking
 console_log("\n2) Tracebacking")
-alignment_matrix = traceback_funk(sc_matrix, sequence1, sequence2)
-print(alignment_matrix)
+alignments = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+print(alignments)
 
 # Call pretty printing
 console_log("\n3) Conventional printing")
-
+alignment = alignments[[1]]
+pretty_print(alignment[1,], alignment[2,])
