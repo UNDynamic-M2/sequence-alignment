@@ -75,6 +75,8 @@ while (scoring_matrix[position] != 0) {
   # print(position)
   
 }
+```
+```{r}
 alignment_list[[2]] <- alignment_matrix
 print(alignment_list)
 ```
