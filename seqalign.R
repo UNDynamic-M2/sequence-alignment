@@ -165,11 +165,21 @@ if (short_sequences) {
 
 # Call tracebacking
 console_log("\n2) Tracebacking")
-alignments = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
-print(alignments)
+alignment_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+print(alignment_results)
 
 # Call pretty printing
 console_log("\n3) Conventional printing")
-alignment = alignments[[1]]
-alignment_result = pretty_print(alignment[1,], alignment[2,])
-console_log(alignment_result)
+alignment_result = alignment_results[[1]]
+alignment = alignment_result[[1]]
+start_position = alignment_result[[2]]
+end_position = alignment_result[[3]]
+alignment_pretty_printed = pretty_print(
+  sequence1_vector,
+  sequence2_vector,
+  alignment[1,],
+  alignment[2,],
+  start_position,
+  end_position
+)
+console_log(alignment_pretty_printed)
