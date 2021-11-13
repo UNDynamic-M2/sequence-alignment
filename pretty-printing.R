@@ -17,18 +17,7 @@ pad_end = function (seq, pad_length) {
 pretty_print = function(seq1, seq2, aligned_seq1, aligned_seq2, start_position, end_position) {
   alignment_str = c()
   
-  for(i in 1:length(aligned_seq1)) {
-    base1 = aligned_seq1[i]
-    base2 = aligned_seq2[i]
-    
-    if (base1 == base2){
-      alignment_str = append(alignment_str, '|')
-    } else if (base1 == '-' | base2 == '-'){
-      alignment_str = append(alignment_str, ' ')
-    } else {
-      alignment_str = append(alignment_str, ':')
-    }
-  }
+
   
   if (end_position[1] - 1 <= 1) {
     pre_alignment_seq1 = c()
@@ -66,13 +55,25 @@ pretty_print = function(seq1, seq2, aligned_seq1, aligned_seq2, start_position, 
   post_alignment_seq1 = pad_end(post_alignment_seq1, max_post)
   post_alignment_seq2 = pad_end(post_alignment_seq2, max_post)
   
-  alignment_str = append(rep(' ', max_pre), alignment_str)
-  
   aligned_seq1 = append(pre_alignment_seq1, c(aligned_seq1, post_alignment_seq1))
   aligned_seq2 = append(pre_alignment_seq2, c(aligned_seq2, post_alignment_seq2))
   
+  for(i in 1:length(aligned_seq1)) {
+    base1 = aligned_seq1[i]
+    base2 = aligned_seq2[i]
+    
+    if (base1 == base2){
+      alignment_str = append(alignment_str, '|')
+    } else if (base1 == '-' | base2 == '-'){
+      alignment_str = append(alignment_str, ' ')
+    } else if (base1 != ' ' && base2 != ' ') {
+      alignment_str = append(alignment_str, ':')
+    } else {
+      alignment_str = append(alignment_str, ' ')
+    }
+  }
   
-  
+  #alignment_str = append(rep(' ', max_pre), alignment_str)
   
   aligned_seq1_str = paste(aligned_seq1, collapse = '')
   aligned_seq2_str = paste(aligned_seq2, collapse = '')
