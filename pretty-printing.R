@@ -1,24 +1,6 @@
-pad_start = function (seq, pad_length) {
-  space_addition = pad_length - length(seq)
-  space_vector = rep(' ', space_addition)
-  seq = append(space_vector, seq)
-  
-  return(seq)
-}
-
-pad_end = function (seq, pad_length) {
-  space_addition = pad_length - length(seq)
-  space_vector = rep(' ', space_addition)
-  seq = append(seq, space_vector)
-  
-  return(seq)
-}
+source("utilities.R")
 
 pretty_print = function(seq1, seq2, aligned_seq1, aligned_seq2, start_position, end_position) {
-  alignment_str = c()
-  
-
-  
   if (end_position[1] - 1 <= 1) {
     pre_alignment_seq1 = c()
   } else {
@@ -58,6 +40,8 @@ pretty_print = function(seq1, seq2, aligned_seq1, aligned_seq2, start_position, 
   aligned_seq1 = append(pre_alignment_seq1, c(aligned_seq1, post_alignment_seq1))
   aligned_seq2 = append(pre_alignment_seq2, c(aligned_seq2, post_alignment_seq2))
   
+  alignment_str = c()
+  
   for(i in 1:length(aligned_seq1)) {
     base1 = aligned_seq1[i]
     base2 = aligned_seq2[i]
@@ -72,8 +56,6 @@ pretty_print = function(seq1, seq2, aligned_seq1, aligned_seq2, start_position, 
       alignment_str = append(alignment_str, ' ')
     }
   }
-  
-  #alignment_str = append(rep(' ', max_pre), alignment_str)
   
   aligned_seq1_str = paste(aligned_seq1, collapse = '')
   aligned_seq2_str = paste(aligned_seq2, collapse = '')
