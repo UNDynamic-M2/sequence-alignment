@@ -11,7 +11,7 @@ ui = fluidPage(
     tags$title('UNDynamic Local Sequence Alignment Tool'),
     
     # pre means pre-formatted text
-    tags$style(HTML(" pre { font-size: 22px} "))),
+    tags$style(HTML(" pre { font-size: 22px} "), '#score{font-size: 42px}')),
   
   
   titlePanel("UNDynamic Local Sequence Alignment Tool"),
@@ -66,7 +66,12 @@ server = function (input, output) {
     #rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
     #colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
     
-    output$scoring_matrix = renderTable(sc_matrix)
+    output$scoring_matrix = renderTable(sc_matrix,
+                                        width = "100%",
+                                        align = 'c',
+                                        bordered = TRUE,
+                                        rownames = TRUE,
+                                        colnames = TRUE,)
     
     # Traceback and pretty print
     # --------------------------
@@ -88,7 +93,7 @@ server = function (input, output) {
       end_position
     )
     
-    output$score = renderText({alignment_score})
+    output$score = renderText({paste('score:', alignment_score)})
     
     output$seq = renderUI({ pre(HTML(paste(alignment_pretty_printed[1], 
                                             alignment_pretty_printed[2], 
