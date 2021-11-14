@@ -50,7 +50,7 @@ Rscript seqalign.R ATTGC ATACGACT --gap_open_penalty 12 --gap_extend_penalty 3 -
 You can also provide sequences from text files:
 
 ```
-Rscript seqalign.R examples/sequence-1 examples/sequence-2
+Rscript seqalign.R examples/example1-seq1 examples/example1-seq2
 ```
 
 In this case since we didn't provide the substitution matrix and the gap penalties, the default ones are used (see "Arguments and options").
