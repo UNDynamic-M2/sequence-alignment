@@ -19,7 +19,7 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
     initial_alignment <- c(seq_1[position[1]-1],seq_2[position[2]-1])
     alignment_matrix <- matrix(initial_alignment)
     
-    diagonal_pos <- c(0,0) 
+    diagonal_pos <- c(start_position[1] - 1, start_position[2] - 1) 
     
     # for loop over the alignment pairs
     for (n in 1:(length(seq_1)+1)) {
