@@ -5,6 +5,15 @@ source("pretty-printing.R")
 source("utilities.R")
 
 ui = fluidPage(
+  
+  #
+  tags$head(
+    tags$title('UNDynamic Local Sequence Alignment Tool'),
+    
+    # pre means pre-formatted text
+    tags$style(HTML(" pre { font-size: 22px} "))),
+  
+  
   titlePanel("UNDynamic Local Sequence Alignment Tool"),
   
   sidebarLayout(
@@ -27,7 +36,11 @@ ui = fluidPage(
       
       tableOutput("scoring_matrix"),
       
-      textOutput("pretty_printing")
+      textOutput("score"),
+      
+      htmlOutput("seq"),
+      #htmlOutput("match"),
+      #htmlOutput("seq2")
       
     )
   )
@@ -49,19 +62,23 @@ server = function (input, output) {
     
     # Scoring matrix
     # --------------
-    sc_matrix = scoring_matrix(sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix)
-    rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
-    colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
+    sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
+    #rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
+    #colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
     
     output$scoring_matrix = renderTable(sc_matrix)
     
     # Traceback and pretty print
     # --------------------------
-    alignment_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+    traceback_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+    alignment_score = traceback_results[[2]]
+    
+    alignment_results = traceback_results[[1]]
     alignment_result = alignment_results[[1]]
     alignment = alignment_result[[1]]
     start_position = alignment_result[[2]]
     end_position = alignment_result[[3]]
+    #seq_1 = pretty_print([1])    
     alignment_pretty_printed = pretty_print(
       sequence1_vector,
       sequence2_vector,
@@ -71,7 +88,14 @@ server = function (input, output) {
       end_position
     )
     
-    output$pretty_printing = renderText({ alignment_pretty_printed })
+    output$score = renderText({alignment_score})
+    
+    output$seq = renderUI({ pre(HTML(paste(alignment_pretty_printed[1], 
+                                            alignment_pretty_printed[2], 
+                                            alignment_pretty_printed[3], 
+                                            sep="<br />"))) })
+   # output$match = renderText({ alignment_pretty_printed[2] })
+    #output$seq2 = renderText({ alignment_pretty_printed[3] })
   })
 
 }

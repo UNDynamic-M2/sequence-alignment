@@ -69,5 +69,5 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
     alignment_list[[i]] <- list(alignment_matrix, start_position, end_position)
   }
   
-  return(alignment_list)
+  return(list(alignment_list,score))
 }

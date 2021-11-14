@@ -36,6 +36,9 @@ get_default_substitution_matrix = function () {
     c(-4, -4, 5, -4),
     c(-4, -4, -4, 5)), 4, 4)
   
+  rownames(subst_matrix) = c("A","T","G","C")
+  colnames(subst_matrix) = c("A","T","G","C")
+  
   return(subst_matrix)
 }
 
