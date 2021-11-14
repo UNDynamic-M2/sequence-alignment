@@ -34,6 +34,7 @@ source("scoring-matrix.R")
 source("traceback.R")
 source("pretty-printing.R")
 
+# --------------------------------------------
 # Define the options that the program can take
 # --------------------------------------------
 
@@ -66,6 +67,7 @@ parsed_cmd = parse_args(opt_parser, positional_arguments = TRUE)
 options = parsed_cmd$options
 arguments = parsed_cmd$args
 
+# ----------------------
 # Validate the arguments
 # ----------------------
 
@@ -89,6 +91,7 @@ sequence1 = toupper(sequence1)
 sequence2 = toupper(sequence2)
 
 # Check correctness of sequences
+# ------------------------------
 
 if (!is_sequence_correct(sequence1)) {
   console_log("Sequence 1 is not in the correct format.")
@@ -105,6 +108,7 @@ sequence2_vector = unlist(strsplit(sequence2, split = ""))
 short_sequences = length(sequence1_vector) < 50 && length(sequence2_vector) < 50
 
 # Check correctness of gap penalties
+# ----------------------------------
 
 gap_open_penalty = options$gap_open_penalty
 gap_extend_penalty = options$gap_extend_penalty
@@ -114,6 +118,7 @@ if (gap_open_penalty <= gap_extend_penalty) {
 }
 
 # Check correctness of substitution matrix
+# ----------------------------------------
 
 subst_matrix = NULL
 
@@ -128,13 +133,19 @@ if (is.null(options$subst_matrix)) {
   )
 }
 
+rownames(subst_matrix) = c("A","T","G","C")
+colnames(subst_matrix) = c("A","T","G","C")
+
+# ---------------
 # Run the program
 # ---------------
 
 # Display input information
+# -------------------------
 
 print_program_header()
 console_log("\nRunning sequence alignment with:")
+
 if (short_sequences) {
   console_log(c("Sequence 1: ", sequence1))
   console_log(c("Sequence 2: ", sequence2))
@@ -151,10 +162,10 @@ console_log(c("Gap extending penalty: ", gap_extend_penalty))
 console_log("\nRunning Smith-Waterman algorithm for local sequence alignment...\n")
 
 # Call initialise and fill of scoring matrix
+# ------------------------------------------
+
 console_log("1) Initialising and filling the scoring matrix")
-sc_matrix = scoring_matrix(sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix)
-rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
-colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
+sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
 
 write.table(sc_matrix, file="scoring_matrix.txt")
 console_log("Scoring matrix saved in 'scoring_matrix.txt'")
@@ -164,11 +175,29 @@ if (short_sequences) {
 }
 
 # Call tracebacking
+# -----------------
+
 console_log("\n2) Tracebacking")
 alignment_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
-print(alignment_results)
+
+for (i in 1:length(alignment_results)) {
+  console_log(c("\nOptimal alignment:", i))
+
+  alignment_result = alignment_results[[i]]
+  alignment = alignment_result[[1]]
+  start_position = alignment_result[[2]]
+  end_position = alignment_result[[3]]
+
+  console_log(paste(alignment[1,], collapse = ""))
+  console_log(paste(alignment[2,], collapse = ""))
+  console_log(c("\nStart position:", start_position[1], ",", start_position[2]))
+  console_log(c("End position:", end_position[1], ",", end_position[2]))
+  console_log(c("Score:", sc_matrix[start_position[1], start_position[2]]))
+}
 
 # Call pretty printing
+# --------------------
+
 console_log("\n3) Conventional printing")
 alignment_result = alignment_results[[1]]
 alignment = alignment_result[[1]]
