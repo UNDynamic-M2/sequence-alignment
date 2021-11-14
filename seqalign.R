@@ -133,9 +133,6 @@ if (is.null(options$subst_matrix)) {
   )
 }
 
-rownames(subst_matrix) = c("A","T","G","C")
-colnames(subst_matrix) = c("A","T","G","C")
-
 # ---------------
 # Run the program
 # ---------------
@@ -178,7 +175,8 @@ if (short_sequences) {
 # -----------------
 
 console_log("\n2) Tracebacking")
-alignment_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+traceback_result = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+alignment_results = traceback_result[[1]]
 
 for (i in 1:length(alignment_results)) {
   console_log(c("\nOptimal alignment:", i))
@@ -211,4 +209,4 @@ alignment_pretty_printed = pretty_print(
   start_position,
   end_position
 )
-console_log(alignment_pretty_printed)
+console_log(paste(alignment_pretty_printed, collapse = "\n"))

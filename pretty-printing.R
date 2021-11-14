@@ -77,5 +77,4 @@ pretty_print = function (seq1, seq2, aligned_seq1, aligned_seq2, start_position,
   alignment_indicators_str = paste(alignment_indicators, collapse = '')
   
   return(c(aligned_seq1_str, alignment_indicators_str, aligned_seq2_str))
-  #return(paste(aligned_seq1_str, alignment_indicators_str, aligned_seq2_str, sep = '\n'))
 }
