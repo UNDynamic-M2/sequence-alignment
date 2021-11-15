@@ -1,40 +1,78 @@
-scoring_matrix_parallel = function (sequence1, sequence2, gap_open_penalty, gap_extend_penalty) {
+library(foreach)
+library(doParallel)
+library(parallel)
+
+scoring_matrix_parallel = function (sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix) {
   rows = length(sequence1) + 1
   columns = length(sequence2) + 1
-  S = matrix(1, rows, columns)
+  S = matrix(0, rows, columns)
   V = matrix(0, rows, columns)
   H = matrix(0, rows, columns)
   
-  S[1,] = 0
-  S[,1] = 0
+  m = rows
+  n = rows + columns - 1
   
-  vd = split(V, row(V) + col(V))
+  SP = matrix(-1, m, n)
+  VP = matrix(-1, m, n)
+  HP = matrix(-1, m, n)
   
-  hd = split(H, row(H) + col(H))
+  num_cores = detectCores()
+  registerDoParallel(num_cores)
   
-  sd = split(S, row(S) + col(S))
-  
-  
-  
-  for (i in 3:length(sd)) {
-    # parallelise
-    vd_vec = vd[i]
-    for (j in 2:(length(vd_vec) - 1)) {
-      vd_vec[j] = max(
-        vd[i - 1][j - 1] - gap_extend_penalty,
-        sd[i - 1][j - 1] - gap_open_penalty
-      )
+  for (i in 1:rows) {
+    for (j in 1:columns) {
+      SP[i, j + i - 1] = 0
+      VP[i, j + i - 1] = 0
+      HP[i, j + i - 1] = 0
     }
-
-    hd_vec = hd[i]
-    for (j in 2:(length(hd_vec) - 1)) {
-      hd_vec[j] = max(
-        hd[i - 1][j] - gap_extend_penalty,
-        sd[i - 1][j] - gap_open_penalty
-      )
-    }
-
   }
   
-  return(sd)
+  for (j in 3:n) {
+    VP[2:m, j] = foreach (i = 2:m, .combine = c) %dopar% {
+      if (VP[i, j - 1] != -1 && VP[i, j] != -1) {
+        max(
+          SP[i - 1, j - 1] - gap_open_penalty,
+          VP[i - 1, j - 1] - gap_extend_penalty
+        )
+      } else {
+        VP[i, j]
+      }
+    }
+    
+    HP[2:m, j] = foreach (i = 2:m, .combine = c) %dopar% {
+      if (HP[i, j - 1] != -1 && HP[i, j] != -1) {
+        max(
+          SP[i, j - 1] - gap_open_penalty,
+          HP[i, j - 1] - gap_extend_penalty
+        )
+      } else {
+        HP[i, j]
+      }
+    }
+
+    SP[2:m, j] = foreach (i = 2:m, .combine = c) %dopar% {
+      if (SP[i, j - 1] != -1 && SP[i, j] != -1) {
+        max(
+          0,
+          SP[i - 1, j - 2] + subst_matrix[sequence1[i - 1], sequence2[j - i]],
+          VP[i, j],
+          HP[i, j]
+        )
+      } else {
+        SP[i, j]
+      }
+    }
+  }
+  
+  # TODO: parallelise this
+  for (i in 1:rows) {
+    for (j in 1:columns) {
+      S[i, j] = SP[i, j + i - 1]
+    }
+  }
+  
+  rownames(S) = c('-', sequence1)
+  colnames(S) = c('-', sequence2)
+
+  return(S)
 }

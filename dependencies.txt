@@ -1,2 +1,4 @@
 optparse
 testthat
+foreach
+doParallel
