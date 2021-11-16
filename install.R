@@ -12,6 +12,7 @@ if (length(indices) > 0) {
 
 if (!is.null(priority_lib)) {
   libs = c(priority_lib)
+  install.packages(deps, repo="http://cran.rstudio.com/", lib = libs)
+} else {
+  install.packages(deps, repo="http://cran.rstudio.com/") 
 }
-
-install.packages(deps, repo="http://cran.rstudio.com/", lib = libs)
