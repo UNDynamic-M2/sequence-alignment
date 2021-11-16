@@ -56,7 +56,7 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
         alignment_matrix <- cbind(alignment_matrix, c(seq_1[position[1]-1],'-'))
       }
       
-      pathway <- append(pathway,position)
+      pathway <- cbind(pathway, position)
       
       # set up diagonal position so that if the position enters row 1 or column 1, end the for loop
       diagonal_pos <- position + c(-1, -1)
