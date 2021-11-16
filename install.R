@@ -1,3 +1,17 @@
 print("Installing required packages...")
 deps = readLines("dependencies.txt")
-install.packages(deps, repo="http://cran.rstudio.com/")
+libs = .libPaths()
+
+conds = sapply(libs, function (l) { grepl("rds/homes", l, fixed = TRUE) })
+indices = which(conds == TRUE)
+priority_lib = NULL
+
+if (length(indices) > 0) {
+  priority_lib = libs[indices[1]]
+}
+
+if (!is.null(priority_lib)) {
+  libs = c(priority_lib)
+}
+
+install.packages(deps, repo="http://cran.rstudio.com/", lib = libs)

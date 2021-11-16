@@ -10,9 +10,11 @@ print_matrix = function (mat) {
 
 print_program_header = function () {
   cat(c(
-    "-------------------------------------",
-    "| UNDynamic Sequence Alignment Tool |",
-    "-------------------------------------"
+    "===========================================",
+    "|                                         |",
+    "| UNDynamic Local Sequence Alignment Tool |",
+    "|                                         |",
+    "==========================================="
   ), sep="\n")
 }
 
