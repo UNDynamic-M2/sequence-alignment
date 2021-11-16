@@ -11,7 +11,7 @@ ui = fluidPage(
     tags$title('UNDynamic Local Sequence Alignment Tool'),
     
     # pre means pre-formatted text
-    tags$style(HTML(" pre { font-size: 22px} "), '#score{font-size: 42px}')),
+    tags$style(HTML(" pre { font-size: 25px} "), '#score{font-size: 42px}', '#Alignmenthead{font-size: 42px}')),
   
   
   titlePanel("UNDynamic Local Sequence Alignment Tool"),
@@ -38,6 +38,7 @@ ui = fluidPage(
       
       textOutput("score"),
       
+      textOutput("Alignmenthead"),
       htmlOutput("seq"),
       #htmlOutput("match"),
       #htmlOutput("seq2")
@@ -93,8 +94,10 @@ server = function (input, output) {
       end_position
     )
     
-    output$score = renderText({paste('score:', alignment_score)})
+    output$score = renderText({paste('Score:', alignment_score)})
     
+    
+    output$Alignmenthead = renderText({'Alignments:'})
     output$seq = renderUI({ pre(HTML(paste(alignment_pretty_printed[1], 
                                             alignment_pretty_printed[2], 
                                             alignment_pretty_printed[3], 

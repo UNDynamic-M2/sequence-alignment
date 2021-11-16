@@ -15,6 +15,8 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
     start_position <- position
     end_position <- position
     
+    pathway <- matrix(position, nrow = 2, ncol = 1)
+    
     # a matrix is created for the alignment and filled with the initial alignment, with the top row corresponding to seq_1 and the bottom seq_2
     initial_alignment <- c(seq_1[position[1]-1],seq_2[position[2]-1])
     alignment_matrix <- matrix(initial_alignment)
@@ -54,6 +56,8 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
         alignment_matrix <- cbind(alignment_matrix, c(seq_1[position[1]-1],'-'))
       }
       
+      pathway <- append(pathway,position)
+      
       # set up diagonal position so that if the position enters row 1 or column 1, end the for loop
       diagonal_pos <- position + c(-1, -1)
       
@@ -66,7 +70,8 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
     alignment_matrix[1,] <- rev_seq1
     alignment_matrix[2,] <- rev_seq2
     
-    alignment_list[[i]] <- list(alignment_matrix, start_position, end_position)
+    alignment_list[[i]] <- list(alignment_matrix, pathway)
+    #alignment_list[[i]] <- list(alignment_matrix, start_position, end_position)
   }
   
   return(list(alignment_list,score))
