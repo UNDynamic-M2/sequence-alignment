@@ -5,10 +5,7 @@ library(parallel)
 scoring_matrix_parallel = function (sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix) {
   rows = length(sequence1) + 1
   columns = length(sequence2) + 1
-  S = matrix(0, rows, columns)
-  V = matrix(0, rows, columns)
-  H = matrix(0, rows, columns)
-  
+
   m = rows
   n = rows + columns - 1
   
@@ -28,43 +25,81 @@ scoring_matrix_parallel = function (sequence1, sequence2, gap_open_penalty, gap_
   }
   
   for (j in 3:n) {
-    VP[2:m, j] = foreach (i = 2:m, .combine = c) %dopar% {
-      if (VP[i, j - 1] != -1 && VP[i, j] != -1) {
-        max(
-          SP[i - 1, j - 1] - gap_open_penalty,
-          VP[i - 1, j - 1] - gap_extend_penalty
-        )
-      } else {
-        VP[i, j]
-      }
-    }
-    
-    HP[2:m, j] = foreach (i = 2:m, .combine = c) %dopar% {
-      if (HP[i, j - 1] != -1 && HP[i, j] != -1) {
-        max(
-          SP[i, j - 1] - gap_open_penalty,
-          HP[i, j - 1] - gap_extend_penalty
-        )
-      } else {
-        HP[i, j]
-      }
-    }
+    u = which(VP[,j] != -1 & VP[,j-1] != -1)
+    u = u[u != 1]
 
-    SP[2:m, j] = foreach (i = 2:m, .combine = c) %dopar% {
-      if (SP[i, j - 1] != -1 && SP[i, j] != -1) {
-        max(
-          0,
-          SP[i - 1, j - 2] + subst_matrix[sequence1[i - 1], sequence2[j - i]],
-          VP[i, j],
-          HP[i, j]
-        )
-      } else {
-        SP[i, j]
-      }
-    }
+    VP[u, j] = unlist(mclapply(u, function (i) {
+      max(
+        SP[i - 1, j - 1] - gap_open_penalty,
+        VP[i - 1, j - 1] - gap_extend_penalty
+      )
+    }, mc.cores = num_cores))
+
+    HP[u, j] = unlist(mclapply(u, function (i) {
+      max(
+        SP[i, j - 1] - gap_open_penalty,
+        HP[i, j - 1] - gap_extend_penalty
+      )
+    }, mc.cores = num_cores))
+
+    SP[u, j] = unlist(mclapply(u, function (i) {
+      max(
+        0,
+        SP[i - 1, j - 2] + subst_matrix[sequence1[i - 1], sequence2[j - i]],
+        VP[i, j],
+        HP[i, j]
+      )
+    }, mc.cores = num_cores))
+    
+    # if (length(u) <= 1000) {
+    #   for (i in u) {
+    #     VP[i, j] = max(
+    #       SP[i - 1, j - 1] - gap_open_penalty,
+    #       VP[i - 1, j - 1] - gap_extend_penalty
+    #     )
+    # 
+    #     HP[i, j] = max(
+    #       SP[i, j - 1] - gap_open_penalty,
+    #       HP[i, j - 1] - gap_extend_penalty
+    #     )
+    # 
+    #     SP[i, j] = max(
+    #       0,
+    #       SP[i - 1, j - 2] + subst_matrix[sequence1[i - 1], sequence2[j - i]],
+    #       VP[i, j],
+    #       HP[i, j]
+    #     )
+    #   }
+    # } else {
+    #   VP[u, j] = foreach (i = u, .combine = c) %dopar% {
+    #     max(
+    #       SP[i - 1, j - 1] - gap_open_penalty,
+    #       VP[i - 1, j - 1] - gap_extend_penalty
+    #     )
+    #   }
+    # 
+    #   HP[u, j] = foreach (i = u, .combine = c) %dopar% {
+    #     max(
+    #       SP[i, j - 1] - gap_open_penalty,
+    #       HP[i, j - 1] - gap_extend_penalty
+    #     )
+    #   }
+    # 
+    #   SP[u, j] = foreach (i = u, .combine = c) %dopar% {
+    #     max(
+    #       0,
+    #       SP[i - 1, j - 2] + subst_matrix[sequence1[i - 1], sequence2[j - i]],
+    #       VP[i, j],
+    #       HP[i, j]
+    #     )
+    #   }
+    # }
+  
   }
   
   # TODO: parallelise this
+  S = matrix(0, rows, columns)
+
   for (i in 1:rows) {
     for (j in 1:columns) {
       S[i, j] = SP[i, j + i - 1]

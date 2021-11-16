@@ -105,7 +105,7 @@ if (!is_sequence_correct(sequence2)) {
 
 sequence1_vector = unlist(strsplit(sequence1, split = ""))
 sequence2_vector = unlist(strsplit(sequence2, split = ""))
-short_sequences = length(sequence1_vector) < 50 && length(sequence2_vector) < 50
+short_sequences = length(sequence1_vector) < 50 & length(sequence2_vector) < 50
 
 # Check correctness of gap penalties
 # ----------------------------------
@@ -141,7 +141,10 @@ if (is.null(options$subst_matrix)) {
 # -------------------------
 
 print_program_header()
-console_log("\nRunning sequence alignment with:")
+
+console_log("\n-----------------")
+console_log("Input information")
+console_log("-----------------\n")
 
 if (short_sequences) {
   console_log(c("Sequence 1: ", sequence1))
@@ -156,57 +159,73 @@ print(subst_matrix)
 console_log(c("Gap opening penalty: ", gap_open_penalty))
 console_log(c("Gap extending penalty: ", gap_extend_penalty))
 
-console_log("\nRunning Smith-Waterman algorithm for local sequence alignment...\n")
-
 # Call initialise and fill of scoring matrix
 # ------------------------------------------
 
-console_log("1) Initialising and filling the scoring matrix")
+console_log("\n-----------------------------------------------")
+console_log("(1) Initialising and filling the scoring matrix")
+console_log("-----------------------------------------------\n")
+
 sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
 
-write.table(sc_matrix, file="scoring_matrix.txt")
-console_log("Scoring matrix saved in 'scoring_matrix.txt'")
+write.table(sc_matrix, file="scoring_matrix.seqalign.out")
+console_log("Scoring matrix saved in 'scoring_matrix.seqalign.out'\n")
 
 if (short_sequences) {
   print(sc_matrix)
 }
 
-# Call tracebacking
-# -----------------
+# Call tracebacking and pretty printing
+# -------------------------------------
 
-console_log("\n2) Tracebacking")
+console_log("\n------------------------------------")
+console_log("(2) Tracebacking and results summary")
+console_log("------------------------------------\n")
+
 traceback_result = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
 alignment_results = traceback_result[[1]]
 
 for (i in 1:length(alignment_results)) {
-  console_log(c("\nOptimal alignment:", i))
+  console_log(paste(c("Optimal alignment [", i, "]"), collapse = ""))
+  console_log("---------------------\n")
 
+  # Extract information from traceback
   alignment_result = alignment_results[[i]]
   alignment = alignment_result[[1]]
   start_position = alignment_result[[2]]
   end_position = alignment_result[[3]]
+  short_alignment = length(alignment[1,]) < 50 & length(alignment[2,])
+  
+  # Compute pretty printing
+  alignment_pretty_printed = pretty_print(
+    sequence1_vector,
+    sequence2_vector,
+    alignment[1,],
+    alignment[2,],
+    start_position,
+    end_position
+  )
+  
+  # Save results
+  traceback_alignment_filename = paste(c("traceback_alignment_", i, ".seqalign.out"), collapse = "")
+  write.table(alignment, traceback_alignment_filename)
+  console_log(paste(c("Saved alignment in '", traceback_alignment_filename, "'"), collapse = ""))
+  
+  result_filename = paste(c("result_", i, ".seqalign.out"), collapse = "")
+  file_conn = file(result_filename, open = 'w')
+  writeLines(alignment_pretty_printed, file_conn)
+  close(file_conn)
+  console_log(paste(c("Saved result in '", result_filename, "'\n"), collapse = ""))
+  
+  # Show results if short alignment
+  if (short_alignment) {
+    console_log(paste(alignment[1,], collapse = ""))
+    console_log(paste(alignment[2,], collapse = ""))
+    console_log("")
+    console_log(paste(alignment_pretty_printed, collapse = "\n"))
+  }
 
-  console_log(paste(alignment[1,], collapse = ""))
-  console_log(paste(alignment[2,], collapse = ""))
   console_log(c("\nStart position:", start_position[1], ",", start_position[2]))
   console_log(c("End position:", end_position[1], ",", end_position[2]))
   console_log(c("Score:", sc_matrix[start_position[1], start_position[2]]))
 }
-
-# Call pretty printing
-# --------------------
-
-console_log("\n3) Conventional printing")
-alignment_result = alignment_results[[1]]
-alignment = alignment_result[[1]]
-start_position = alignment_result[[2]]
-end_position = alignment_result[[3]]
-alignment_pretty_printed = pretty_print(
-  sequence1_vector,
-  sequence2_vector,
-  alignment[1,],
-  alignment[2,],
-  start_position,
-  end_position
-)
-console_log(paste(alignment_pretty_printed, collapse = "\n"))

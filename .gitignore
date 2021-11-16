@@ -3,4 +3,4 @@
 .RData
 .Ruserdata
 rsconnect/
-scoring_matrix.txt
+**/*.seqalign.out
