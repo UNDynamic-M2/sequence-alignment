@@ -192,9 +192,9 @@ for (i in 1:length(alignment_results)) {
   # Extract information from traceback
   alignment_result = alignment_results[[i]]
   alignment = alignment_result[[1]]
-  path = alignment_result[[2]]
-  start_position = path[, 1]
-  end_position = path[, ncol(path)]
+  start_position = alignment_result[[2]]
+  end_position = alignment_result[[3]]
+  path = alignment_result[[4]]
   short_alignment = length(alignment[1,]) < 50 & length(alignment[2,])
   
   # Compute pretty printing
@@ -226,8 +226,9 @@ for (i in 1:length(alignment_results)) {
     console_log(paste(alignment_pretty_printed, collapse = "\n"))
   }
 
-  console_log(c("Score:", sc_matrix[start_position[1], start_position[2]]))
+  console_log(c("\nScore:", sc_matrix[start_position[1], start_position[2]]))
   console_log("\nTraceback path:")
+  print(path)
   
   console_log(c("\nStart position:", start_position[1], ",", start_position[2]))
   console_log(c("End position:", end_position[1], ",", end_position[2]))
