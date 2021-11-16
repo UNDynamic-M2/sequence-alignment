@@ -6,11 +6,12 @@ source("utilities.R")
 
 ui = fluidPage(
   
-  #
   tags$head(
+    
+    # Title
     tags$title('UNDynamic Local Sequence Alignment Tool'),
     
-    # pre means pre-formatted text
+    # Styling pre-formatted text
     tags$style(HTML(" pre { font-size: 25px} "), '#score{font-size: 42px}', '#Alignmenthead{font-size: 42px}')),
   
   
@@ -18,26 +19,33 @@ ui = fluidPage(
   
   sidebarLayout(
     
+    # Inputs
+    #-------
     sidebarPanel(
       
+      # Input sequences
       textInput("sequence1", h3("Sequence 1")),
-      
       textInput("sequence2", h3("Sequence 2")),
       
+      # Input gap penalties
       numericInput("gap_open_penalty", h3("Gap opening penalty"), value = 10),
-      
       numericInput("gap_extend_penalty", h3("Gap extension penalty"), value = 0.5),
       
       actionButton("run", "Run")
       
     ),
     
+    # Outputs
+    #--------
     mainPanel(
       
+      # Output scoring matrix
       tableOutput("scoring_matrix"),
       
+      # Output overall score
       textOutput("score"),
       
+      # Output the aligned sequences
       textOutput("Alignmenthead"),
       htmlOutput("seq"),
       #htmlOutput("match"),
@@ -63,10 +71,13 @@ server = function (input, output) {
     
     # Scoring matrix
     # --------------
-    sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
-    #rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
-    #colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
     
+    # Inputs for scoring matrix
+    sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
+      #rownames(sc_matrix) = c('-', unlist(strsplit(sequence1, "")))
+      #colnames(sc_matrix) = c('-', unlist(strsplit(sequence2, "")))
+    
+    # Format scoring matrix
     output$scoring_matrix = renderTable(sc_matrix,
                                         width = "100%",
                                         align = 'c',
@@ -74,17 +85,31 @@ server = function (input, output) {
                                         rownames = TRUE,
                                         colnames = TRUE,)
     
+   
     # Traceback and pretty print
     # --------------------------
-    traceback_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
-    alignment_score = traceback_results[[2]]
     
+    # Summon results of traceback function, inputted with the scoring matrix and both sequences
+    traceback_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
+    #print(traceback_results)
+    #for(i )
+    # Summon alignment_matrix, start_position, end_position and pathway from traceback_results
     alignment_results = traceback_results[[1]]
+    #print(alignment_results)
+    
+    # Summon results for each starting position
     alignment_result = alignment_results[[1]]
+    #print(alignment_result)
+    
     alignment = alignment_result[[1]]
+    #print(alignment)
     start_position = alignment_result[[2]]
+    
     end_position = alignment_result[[3]]
-    #seq_1 = pretty_print([1])    
+    pathway_result = alignment_result[[4]]
+    #print(pathway_result)
+    
+    # Input sequences, alignments and starting and end positions into pretty_print function
     alignment_pretty_printed = pretty_print(
       sequence1_vector,
       sequence2_vector,
@@ -93,15 +118,19 @@ server = function (input, output) {
       start_position,
       end_position
     )
-    
-    output$score = renderText({paste('Score:', alignment_score)})
-    
+    #print(alignment_pretty_printed)
     
     output$Alignmenthead = renderText({'Alignments:'})
     output$seq = renderUI({ pre(HTML(paste(alignment_pretty_printed[1], 
                                             alignment_pretty_printed[2], 
-                                            alignment_pretty_printed[3], 
+                                            alignment_pretty_printed[3],
+                                            pathway_result,
                                             sep="<br />"))) })
+    
+    # Summon score and output
+    alignment_score = traceback_results[[2]]
+    output$score = renderText({paste('Score:', alignment_score)})
+    
    # output$match = renderText({ alignment_pretty_printed[2] })
     #output$seq2 = renderText({ alignment_pretty_printed[3] })
   })
