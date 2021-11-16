@@ -7,7 +7,7 @@ indices = which(conds == TRUE)
 priority_lib = NULL
 
 if (length(indices) > 0) {
-  priority_lib = indices[1]
+  priority_lib = libs[indices[1]]
 }
 
 if (!is.null(priority_lib)) {
