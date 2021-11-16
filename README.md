@@ -1,4 +1,4 @@
-# Sequence Alignment
+# UNDynamic Local Sequence Alignment
 
 Local sequence alignment using the Smith-Waterman algorithm.
 
@@ -29,13 +29,16 @@ There are two ways you can use the tool, through a command line interface or a g
 
 ### Command Line Interface
 
-First, install the dependencies to use the tool (two ways):
+- In the BEAR Portal launch an R session and load the project (`sequence-alignment.RProj`). Then in the terminal tab of RStudio you can run the commands below.
+- On your own machine just open a terminal window and run the commands below.
+
+First, install the dependencies to use the tool, for UNIX systems:
 
 ```
 ./install.sh
 ```
 
-or
+or (Windows and UNIX):
 
 ```
 Rscript install.R
