@@ -49,14 +49,14 @@ option_list = list(
   make_option(
     c("-p", "--gap_open_penalty"),
     type="double",
-    default=10, 
+    default=12, 
     help="the gap opening penalty",
     metavar="float"
   ),
   make_option(
     c("-e", "--gap_extend_penalty"),
     type="double",
-    default=0.5, 
+    default=3, 
     help="the gap extension penalty",
     metavar="float"
   )
