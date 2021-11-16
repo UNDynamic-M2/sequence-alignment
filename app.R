@@ -48,6 +48,7 @@ ui = fluidPage(
       # Output the aligned sequences
       textOutput("Alignmenthead"),
       htmlOutput("seq"),
+      textOutput('pathway')
       #htmlOutput("match"),
       #htmlOutput("seq2")
       
@@ -91,48 +92,68 @@ server = function (input, output) {
     
     # Summon results of traceback function, inputted with the scoring matrix and both sequences
     traceback_results = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
-    #print(traceback_results)
-    #for(i )
+
     # Summon alignment_matrix, start_position, end_position and pathway from traceback_results
+    
     alignment_results = traceback_results[[1]]
-    #print(alignment_results)
     
+    pretty_print_list = list()
+    
+    for(i in 1:length(alignment_results)) {
     # Summon results for each starting position
-    alignment_result = alignment_results[[1]]
-    #print(alignment_result)
+      alignment_result = alignment_results[[i]]
+      
+      alignment = alignment_result[[1]]
+      start_position = alignment_result[[2]]
+      end_position = alignment_result[[3]]
+      
+      pathway_result = alignment_result[[4]]
+      pathway_vec = c()
+      
+      for(z in 1:ncol(pathway_result)) {
+        pathway_vec = append(pathway_vec, paste(pathway_result[,z],collapse = ","))      
+         }
+      
+      # Input sequences, alignments and starting and end positions into pretty_print function
+      alignment_pretty_printed = pretty_print(
+        sequence1_vector,
+        sequence2_vector,
+        alignment[1,],
+        alignment[2,],
+        start_position,
+        end_position
+      ) 
+      
+      
+      pretty_print_list[[i]] = paste(alignment_pretty_printed[1], 
+                                     alignment_pretty_printed[2], 
+                                     alignment_pretty_printed[3],
+                                     paste(pathway_vec, collapse = " -> "),
+                                     sep="<br />"
+                                     )
+    }
     
-    alignment = alignment_result[[1]]
-    #print(alignment)
-    start_position = alignment_result[[2]]
+    pretty_print_list_str = paste(pretty_print_list, collapse = "<br /><br />")
+      
+  
+      output$Alignmenthead = renderText({'Alignments:'})
+      output$seq = renderUI({ pre(HTML(pretty_print_list_str)) })
+      
     
-    end_position = alignment_result[[3]]
-    pathway_result = alignment_result[[4]]
-    #print(pathway_result)
     
-    # Input sequences, alignments and starting and end positions into pretty_print function
-    alignment_pretty_printed = pretty_print(
-      sequence1_vector,
-      sequence2_vector,
-      alignment[1,],
-      alignment[2,],
-      start_position,
-      end_position
-    )
-    #print(alignment_pretty_printed)
-    
-    output$Alignmenthead = renderText({'Alignments:'})
-    output$seq = renderUI({ pre(HTML(paste(alignment_pretty_printed[1], 
-                                            alignment_pretty_printed[2], 
-                                            alignment_pretty_printed[3],
-                                            pathway_result,
-                                            sep="<br />"))) })
+     # for (i in 1:dim(pathway_result)[2]) {
+        
+      #  output$pathway = renderText({ 
+         
+       #    pathway[i]})
+        
+      #}
+      
     
     # Summon score and output
     alignment_score = traceback_results[[2]]
     output$score = renderText({paste('Score:', alignment_score)})
-    
-   # output$match = renderText({ alignment_pretty_printed[2] })
-    #output$seq2 = renderText({ alignment_pretty_printed[3] })
+ 
   })
 
 }

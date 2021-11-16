@@ -1,4 +1,15 @@
+# Traceback Function: Daniel Power and Haonan Wang
+#------------------------------------------------------------------------
+# A function that inputs the sequences and scoring matrix and main outputs
+# the score and a matrices of alignments, as well as the pathway starting and ending position
+
+
+#------------------------------------------------------------------------
+
 # functionalise
+
+
+
 traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
   
   # find maximum value in scoring matrix and allocate as score and start position
@@ -70,7 +81,6 @@ traceback_funk <- function(scoring_matrix, seq_1, seq_2) {
     alignment_matrix[1,] <- rev_seq1
     alignment_matrix[2,] <- rev_seq2
     
-      #alignment_list[[i]] <- list(alignment_matrix, pathway)
     alignment_list[[i]] <- list(alignment_matrix, start_position, end_position, pathway)
   }
   
