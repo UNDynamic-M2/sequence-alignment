@@ -11,7 +11,7 @@ if (length(indices) > 0) {
 }
 
 if (!is.null(priority_lib)) {
-  .libPaths(c(priority_lib, libs))
+  libs = c(priority_lib, libs)
 }
 
-install.packages(deps, repo="http://cran.rstudio.com/")
+install.packages(deps, repo="http://cran.rstudio.com/", lib = libs)
