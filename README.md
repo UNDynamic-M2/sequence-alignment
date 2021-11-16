@@ -1,4 +1,4 @@
-# Sequence Alignment
+# UNDynamic Local Sequence Alignment
 
 Local sequence alignment using the Smith-Waterman algorithm.
 
