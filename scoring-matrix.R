@@ -1,3 +1,14 @@
+# ===========================================================
+# scoring-matrix.R
+# 
+# Given two sequences, gap penalties and substitution matrix,
+# it will return the Smith-Waterman scoring matrix.
+#
+# Authors:
+# - Haonan Jiang
+# - Hussain Asif
+# ===========================================================
+
 scoring_matrix = function (sequence1, sequence2, gap_open_penalty, gap_extend_penalty, subst_matrix) {
   rows = length(sequence1) + 1
   columns = length(sequence2) + 1

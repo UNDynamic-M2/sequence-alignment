@@ -44,6 +44,13 @@ or (Windows and UNIX):
 Rscript install.R
 ```
 
+If none of the above work, please install the packages manually in R:
+
+```
+deps = readLines("dependencies.txt")
+install.packages(deps) 
+```
+
 Then you can use the tool as follows:
 
 ```

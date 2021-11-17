@@ -226,10 +226,20 @@ for (i in 1:length(alignment_results)) {
     console_log(paste(alignment_pretty_printed, collapse = "\n"))
   }
 
+  # Show score, start, and end position
   console_log(c("\nScore:", sc_matrix[start_position[1], start_position[2]]))
-  console_log("\nTraceback path:")
-  print(path)
-  
-  console_log(c("\nStart position:", start_position[1], ",", start_position[2]))
+  console_log(c("Start position:", start_position[1], ",", start_position[2]))
   console_log(c("End position:", end_position[1], ",", end_position[2]))
+  
+  # Save traceback path
+  console_log("\nTraceback path:")
+
+  traceback_path_filename = paste(c("traceback_path_", i, ".seqalign.out"), collapse = "")
+  write.table(path, traceback_path_filename)
+  console_log(paste(c("Saved traceback path in '", traceback_path_filename, "'"), collapse = ""))
+  
+  if (short_alignment) {
+    print_traceback_path(path)
+    # print(path)
+  }
 }

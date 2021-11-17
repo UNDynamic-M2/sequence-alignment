@@ -1,5 +1,18 @@
+# ===========================================================
+# pretty-printing.R
+# 
+# Prints the alignments within the sequences, for context.
+#
+# Authors:
+# - Ossama Edbali
+# - Waleed Hussain
+# ===========================================================
+
 source("utilities.R")
 
+# Gets the prefix of the sequence before the alignment starts
+# seq: sequence
+# limit_index: prefix cutoff
 get_pre_alignment_vector = function (seq, limit_index) {
   if (limit_index <= 1) {
     pre_alignment_vector = c()
@@ -10,18 +23,24 @@ get_pre_alignment_vector = function (seq, limit_index) {
   return(pre_alignment_vector)
 }
 
-get_post_alignment_vector = function (seq, limit_index) {
+# Gets the postfix of the sequence after the alignment ends
+# seq: sequence
+# start_index: postfix cutoff
+get_post_alignment_vector = function (seq, start_index) {
   last_index = length(seq)
 
-  if (limit_index == last_index) {
+  if (start_index == last_index) {
     post_alignment_vector = c()
   } else {
-    post_alignment_vector = seq[(limit_index + 1):last_index]
+    post_alignment_vector = seq[(start_index + 1):last_index]
   }
   
   return(post_alignment_vector)
 }
 
+# Gets the alignment indicators between the aligned sequences
+# aligned_seq1: alignment for sequence 1
+# aligned_seq2: alignment for sequence 2
 get_alignment_indicators = function (aligned_seq1, aligned_seq2) {
   alignment_indicators = c()
   
