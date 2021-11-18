@@ -4,7 +4,7 @@ Local sequence alignment using the Smith-Waterman algorithm.
 
 ## Usage
 
-There are two ways you can use the tool, through a command line interface or a graphical user interface.
+There are three ways you can use the tool, through a command line interface, manually running the R script through R studio, or a graphical user interface. The first one is preferred as it's more portable.
 
 ### Command Line Interface
 
@@ -57,6 +57,10 @@ The options are as follows:
 | `-s`, `--subst_matrix`       | The substitution matrix used for scoring | string or filename | DNAFull |
 | `-l`, `--parallel`           | Whether to run the algorithm in parallel | boolean            | false   |
 | `-h`, `--help`               | Display the help page for the tool       | /                  | /       |
+
+### Manual
+
+You can run `seqalign_manual.R` through RStudio instead of the script through command line.
 
 ### Graphical user interface
 

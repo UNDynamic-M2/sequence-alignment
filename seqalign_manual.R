@@ -1,3 +1,5 @@
+setwd("/rds/projects/c/cazierj-msc-bioinformatics/module2/Projects/GROUPS_2021/UNDynamic/sequence-alignment")
+
 source("utilities.R")
 source("scoring-matrix.R")
 source("traceback.R")
