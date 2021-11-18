@@ -31,6 +31,7 @@
 library(optparse)
 source("utilities.R")
 source("scoring-matrix.R")
+source("scoring-matrix-parallel.R")
 source("traceback.R")
 source("pretty-printing.R")
 
@@ -59,6 +60,12 @@ option_list = list(
     default=3, 
     help="the gap extension penalty",
     metavar="float"
+  ),
+  make_option(
+    c("-l", "--parallel"),
+    action="store_true",
+    default=FALSE,
+    help="whether to run the scoring matrix calculation in parallel"
   )
 ) 
 
@@ -166,7 +173,13 @@ console_log("\n-----------------------------------------------")
 console_log("(1) Initialising and filling the scoring matrix")
 console_log("-----------------------------------------------\n")
 
-sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
+if (!options$parallel) {
+  console_log("Running sequentially")
+  sc_matrix = scoring_matrix(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
+} else {
+  console_log("Running in parallel")
+  sc_matrix = scoring_matrix_parallel(sequence1_vector, sequence2_vector, gap_open_penalty, gap_extend_penalty, subst_matrix)
+}
 
 write.table(sc_matrix, file="scoring_matrix.seqalign.out")
 console_log("Scoring matrix saved in 'scoring_matrix.seqalign.out'\n")

@@ -76,6 +76,7 @@ The options are as follows:
 | `-p`, `--gap_open_penalty`   | The gap opening penalty                  | float              | 10      |
 | `-e`, `--gap_extend_penalty` | The gap extension penalty                | float              | 0.5     |
 | `-s`, `--subst_matrix`       | The substitution matrix used for scoring | string or filename | DNAFull |
+| `-l`, `--parallel`           | Whether to run the algorithm in parallel | boolean            | false   |
 | `-h`, `--help`               | Display the help page for the tool       | /                  | /       |
 
 ### Graphical user interface
