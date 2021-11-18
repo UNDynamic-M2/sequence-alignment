@@ -199,7 +199,7 @@ traceback_result = traceback_funk(sc_matrix, sequence1_vector, sequence2_vector)
 alignment_results = traceback_result[[1]]
 
 for (i in 1:length(alignment_results)) {
-  console_log(paste(c("Optimal alignment [", i, "]"), collapse = ""))
+  console_log(paste(c("\nOptimal alignment [", i, "]"), collapse = ""))
   console_log("---------------------\n")
 
   # Extract information from traceback
