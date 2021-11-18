@@ -2,37 +2,16 @@
 
 Local sequence alignment using the Smith-Waterman algorithm.
 
-## Development instructions
-
-First of all we need to clone the repository to our local machine:
-
-```
-git clone https://github.com/UNDynamic-M2/sequence-alignment.git
-```
-
-Then to make a change we follow these steps:
-
-1. Make the change (e.g. add/remove/amend file)
-2. `git add .`
-3. `git commit -m "message explaining the change"`
-4. `git push`
-
-To pull changes from the remote repository use:
-
-```
-git pull
-```
-
 ## Usage
 
 There are two ways you can use the tool, through a command line interface or a graphical user interface.
 
 ### Command Line Interface
 
-- In the BEAR Portal launch an R session and load the project (`sequence-alignment.RProj`). Then in the terminal tab of RStudio you can run the commands below.
+- In the **BEAR Portal** launch an R session and in the terminal tab run the commands below (do **not** open the repository as a project as somehow it crashes).
 - On your own machine just open a terminal window and run the commands below.
 
-First, install the dependencies to use the tool, for UNIX systems:
+First, install the dependencies to use the tool. For UNIX systems:
 
 ```
 ./install.sh
@@ -48,7 +27,7 @@ If none of the above work, please install the packages manually in R:
 
 ```
 deps = readLines("dependencies.txt")
-install.packages(deps) 
+install.packages(deps)
 ```
 
 Then you can use the tool as follows:
