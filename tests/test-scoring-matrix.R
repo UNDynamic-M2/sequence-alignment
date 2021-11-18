@@ -14,10 +14,19 @@ test_that("test scoring matrix dimensions", {
   sc_matrix = scoring_matrix(seq1, seq2, gap_open_penalty, gap_extend_penalty, subst_matrix)
   
   # assert
-  expect_equal(nrow(sc_matrix), 4)
-  expect_equal(ncol(sc_matrix), 5)
+  actual_rows = nrow(sc_matrix)
+  expected_rows = 4
+  actual_columns = ncol(sc_matrix)
+  expected_columns = 5
+  
+  expect_equal(actual_rows, expected_rows)
+  expect_equal(actual_columns, expected_columns)
 })
 
 test_that("test max score", {
   # arrange
+  
+  # act
+  
+  # assert
 })

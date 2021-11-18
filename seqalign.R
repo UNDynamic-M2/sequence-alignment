@@ -205,9 +205,9 @@ for (i in 1:length(alignment_results)) {
   # Extract information from traceback
   alignment_result = alignment_results[[i]]
   alignment = alignment_result[[1]]
-  start_position = alignment_result[[2]]
-  end_position = alignment_result[[3]]
-  path = alignment_result[[4]]
+  path = alignment_result[[2]]
+  start_position = path[,1]
+  end_position = path[,ncol(path)]
   short_alignment = length(alignment[1,]) < 50 & length(alignment[2,])
   
   # Compute pretty printing
